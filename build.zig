@@ -20,11 +20,6 @@ pub fn build_010(b: *Bb) void {
     lib.setBuildMode(mode);
     lib.install();
 
-    // expose zig-cli as a module
-    _ = b.addModule(package_name, .{
-        .source_file = .{ .path = package_path },
-    });
-
     const main_tests = b.addTest("src/tests.zig");
     main_tests.setBuildMode(mode);
 
@@ -61,6 +56,11 @@ pub fn build_011(b: *std.Build) void {
         .optimize = optimize,
     });
     b.installArtifact(lib);
+
+    // expose zig-cli as a module
+    _ = b.addModule(package_name, .{
+        .source_file = .{ .path = package_path },
+    });
 
     const main_tests = b.addTest(.{
         .root_source_file = .{ .path = "src/tests.zig" },
