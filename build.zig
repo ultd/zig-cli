@@ -3,6 +3,9 @@ const std = @import("std");
 const zig011 = @hasDecl(std, "Build");
 const Bb = if (zig011) std.Build else std.build.Builder;
 
+const package_name = "zig-cli";
+const package_path = "src/main.zig";
+
 pub fn build(b: *Bb) void {
     if (zig011)
         build_011(b)
@@ -16,6 +19,11 @@ pub fn build_010(b: *Bb) void {
     const lib = b.addStaticLibrary("zig-cli", "src/main.zig");
     lib.setBuildMode(mode);
     lib.install();
+
+    // expose zig-cli as a module
+    _ = b.addModule(package_name, .{
+        .source_file = .{ .path = package_path },
+    });
 
     const main_tests = b.addTest("src/tests.zig");
     main_tests.setBuildMode(mode);
